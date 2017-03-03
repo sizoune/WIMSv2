@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+<group android:checkableBehavior="single">
+    <item
+        android:id="@+id/nav_beranda"
+
+        android:title="Beranda "/>
+    <item
+        android:id="@+id/nav_pesan"
+
+        android:title="Pesan" />
+    <item
+        android:id="@+id/nav_timeline"
+
+        android:title="Timeline" />
+    <item
+        android:id="@+id/nav_donasi"
+
+        android:title="Donasi" />
+</group>
+
+
+</menu>
