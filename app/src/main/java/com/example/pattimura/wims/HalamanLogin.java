@@ -1,12 +1,17 @@
 package com.example.pattimura.wims;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -41,6 +46,14 @@ public class HalamanLogin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_halaman_login);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarlogin);
+        TextView judul = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        judul.setText("MASUK");
+        TextView textView = (TextView) findViewById(R.id.textView3);
+        SpannableString content = new SpannableString("lupa kata sandi?");
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        textView.setText(content);
+
         mAuth = FirebaseAuth.getInstance();
 
         user = (EditText) findViewById(R.id.input_email);
@@ -61,7 +74,7 @@ public class HalamanLogin extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    Intent i = new Intent(HalamanLogin.this,HalamanUtama.class);
+                    Intent i = new Intent(HalamanLogin.this,LandingPage.class);
                     startActivity(i);
                     finish();
                 }
@@ -87,14 +100,15 @@ public class HalamanLogin extends AppCompatActivity {
     private void masukcuy(final String userr, final String Pass) {
 
         //Creating a string request
-        final StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://139.59.110.97/api/user/login",
+        final StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://scripthink.com/wims/api/Login/create",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
 
                         try {
                             JSONObject token = new JSONObject(response);
-                            tok = token.getString("token");
+                            JSONObject object = token.getJSONObject("data");
+                            tok = object.getString("token");
                             mAuth.signInWithCustomToken(tok).addOnCompleteListener(HalamanLogin.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -102,7 +116,7 @@ public class HalamanLogin extends AppCompatActivity {
                                         Toast.makeText(HalamanLogin.this, "Authentication failed : "+task.getException(),
                                                 Toast.LENGTH_SHORT).show();
                                     } else {
-                                        Intent i = new Intent(HalamanLogin.this,HalamanUtama.class);
+                                        Intent i = new Intent(HalamanLogin.this,LandingPage.class);
                                         startActivity(i);
                                         finish();
                                     }
@@ -134,7 +148,7 @@ public class HalamanLogin extends AppCompatActivity {
 
                 try {
                     //Adding parameters to request
-                    params.put("email",userr);
+                    params.put("username",userr);
                     params.put("password",Pass);
                     //returning parameter
                     return params;
