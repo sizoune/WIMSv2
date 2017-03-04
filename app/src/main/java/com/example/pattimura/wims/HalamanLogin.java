@@ -1,5 +1,6 @@
 package com.example.pattimura.wims;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
@@ -40,6 +41,7 @@ public class HalamanLogin extends AppCompatActivity {
     private String tok;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private ProgressDialog progressdialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,9 @@ public class HalamanLogin extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarlogin);
         TextView judul = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         judul.setText("MASUK");
         TextView textView = (TextView) findViewById(R.id.textView3);
         SpannableString content = new SpannableString("lupa kata sandi?");
@@ -55,6 +60,7 @@ public class HalamanLogin extends AppCompatActivity {
         textView.setText(content);
 
         mAuth = FirebaseAuth.getInstance();
+        progressdialog = new ProgressDialog(this);
 
         user = (EditText) findViewById(R.id.input_email);
         pass = (EditText) findViewById(R.id.input_password);
@@ -63,8 +69,26 @@ public class HalamanLogin extends AppCompatActivity {
         masuk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!user.getText().equals("") && !pass.getText().equals("")) {
-                    masukcuy(user.getText().toString(), pass.getText().toString());
+                if (user.getText().toString().matches("")) {
+                    Toast.makeText(HalamanLogin.this, "Tolong masukkan alamat email anda", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (pass.getText().toString().matches("")) {
+                    Toast.makeText(HalamanLogin.this, "Tolong masukkan kata sandi email anda", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    String mail = user.getText().toString();
+                    String passw = pass.getText().toString();
+                    progressdialog.setMessage("Mohon tunggu...");
+                    progressdialog.show();
+                    mAuth.signInWithEmailAndPassword(mail, passw)
+                            .addOnCompleteListener(HalamanLogin.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    progressdialog.dismiss();
+                                    startActivity(new Intent(HalamanLogin.this,LandingPage.class));
+                                    finish();
+                                }
+                            });
                 }
             }
         });
@@ -74,7 +98,7 @@ public class HalamanLogin extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    Intent i = new Intent(HalamanLogin.this,LandingPage.class);
+                    Intent i = new Intent(HalamanLogin.this, LandingPage.class);
                     startActivity(i);
                     finish();
                 }
@@ -113,10 +137,10 @@ public class HalamanLogin extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (!task.isSuccessful()) {
-                                        Toast.makeText(HalamanLogin.this, "Authentication failed : "+task.getException(),
+                                        Toast.makeText(HalamanLogin.this, "Authentication failed : " + task.getException(),
                                                 Toast.LENGTH_SHORT).show();
                                     } else {
-                                        Intent i = new Intent(HalamanLogin.this,LandingPage.class);
+                                        Intent i = new Intent(HalamanLogin.this, LandingPage.class);
                                         startActivity(i);
                                         finish();
                                     }
@@ -148,8 +172,8 @@ public class HalamanLogin extends AppCompatActivity {
 
                 try {
                     //Adding parameters to request
-                    params.put("username",userr);
-                    params.put("password",Pass);
+                    params.put("username", userr);
+                    params.put("password", Pass);
                     //returning parameter
                     return params;
                 } catch (Exception e) {

@@ -10,14 +10,22 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
-        <activity android:name=".HalamanLogin">
+        <activity
+            android:name=".HalamanLogin"
+            android:label=""
+            android:parentActivityName=".HalamanAwal" />
+        <activity android:name=".LandingPage" />
+        <activity android:name=".HalamanAwal">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LandingPage"></activity>
+        <activity
+            android:name=".HalamanDaftar"
+            android:label=""
+            android:parentActivityName=".HalamanAwal"></activity>
     </application>
 
 </manifest>

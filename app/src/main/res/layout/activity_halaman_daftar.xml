@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.pattimura.wims.HalamanDaftar">
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbardaftar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/blue"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Title"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+
+        android:orientation="vertical"
+        android:layout_below="@+id/appBarLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Daftarkan diri anda sekarang! dan temukan"
+            android:textSize="18sp"
+            android:layout_marginTop="40sp"
+            android:layout_marginLeft="1dp">
+        </TextView>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="teman atau alumni anda"
+            android:textSize="18sp"></TextView>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <EditText
+                android:id="@+id/input_emaildaftar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Alamat Email"
+                android:inputType="textEmailAddress"
+                android:textColorHint="@color/blue" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <EditText
+                android:id="@+id/input_passworddaftar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Kata Sandi Email"
+                android:inputType="textPassword"
+                android:textColorHint="@color/blue" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_daftardaftar"
+            android:layout_width="310dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="40dp"
+            android:background="@color/blue"
+            android:text="Daftar"
+            android:textColor="@android:color/white" />
+
+
+    </LinearLayout>
+</RelativeLayout>
