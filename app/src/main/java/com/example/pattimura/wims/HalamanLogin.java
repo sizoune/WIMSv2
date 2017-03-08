@@ -85,8 +85,15 @@ public class HalamanLogin extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     progressdialog.dismiss();
-                                    startActivity(new Intent(HalamanLogin.this,LandingPage.class));
-                                    finish();
+                                    if (task.isSuccessful()) {
+                                        startActivity(new Intent(HalamanLogin.this,LandingPage.class));
+                                        finish();
+                                    } else {
+                                        Toast.makeText(HalamanLogin.this, "Alamat email / password anda salah !", Toast.LENGTH_SHORT).show();
+                                        user.setText("");
+                                        pass.setText("");
+                                        return;
+                                    }
                                 }
                             });
                 }

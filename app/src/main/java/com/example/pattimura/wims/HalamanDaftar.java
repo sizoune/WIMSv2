@@ -54,17 +54,26 @@ public class HalamanDaftar extends AppCompatActivity {
                     Toast.makeText(HalamanDaftar.this, "Tolong masukkan kata sandi email anda", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    progressdialog.setMessage("verifikasi user...");
+                    progressdialog.setMessage("Mendaftarkan user...");
                     progressdialog.show();
                     String mail = user.getText().toString();
                     String passw = pass.getText().toString();
-                    mAuth.signInWithEmailAndPassword(mail, passw)
+                    mAuth.createUserWithEmailAndPassword(mail, passw)
                             .addOnCompleteListener(HalamanDaftar.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
-                                    progressdialog.dismiss();
-                                    startActivity(new Intent(HalamanDaftar.this,LandingPage.class));
-                                    finish();
+                                    if (task.isSuccessful()) {
+                                        progressdialog.dismiss();
+                                        startActivity(new Intent(HalamanDaftar.this, LandingPage.class));
+                                        finish();
+                                    } else {
+                                        progressdialog.dismiss();
+                                        Toast.makeText(HalamanDaftar.this, "tidak dapat mendaftarkan user, tolong coba lagi !", Toast.LENGTH_SHORT).show();
+                                        user.setText("");
+                                        pass.setText("");
+                                        return;
+                                    }
+
                                 }
                             });
                 }
