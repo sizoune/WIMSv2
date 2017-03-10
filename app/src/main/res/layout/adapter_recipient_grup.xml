@@ -16,8 +16,6 @@
 
         >
 
-
-
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="30dp"
@@ -31,6 +29,8 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content">
 
+
+
             <LinearLayout
                 android:id="@+id/chatLayout"
                 android:layout_width="wrap_content"
@@ -41,6 +41,11 @@
                 android:gravity="bottom"
 
                 >
+
+
+
+
+
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -84,6 +89,16 @@
                     android:textSize="4pt"
                     />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/message_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Adele"
+                android:textSize="5pt"
+                android:textColor="@color/blue"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="27dp" />
 
         </RelativeLayout>
 

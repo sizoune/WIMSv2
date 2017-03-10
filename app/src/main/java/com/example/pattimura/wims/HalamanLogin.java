@@ -23,11 +23,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.pattimura.wims.Model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -42,6 +48,9 @@ public class HalamanLogin extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private ProgressDialog progressdialog;
+    private FirebaseUser mFuser;
+    private FirebaseDatabase mDb;
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +62,15 @@ public class HalamanLogin extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        judul.setText("MASUK");
+        judul.setText("Masuk");
         TextView textView = (TextView) findViewById(R.id.textView3);
         SpannableString content = new SpannableString("lupa kata sandi?");
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         textView.setText(content);
 
+        mUser = new User();
         mAuth = FirebaseAuth.getInstance();
+        mDb = FirebaseDatabase.getInstance();
         progressdialog = new ProgressDialog(this);
 
         user = (EditText) findViewById(R.id.input_email);
@@ -86,8 +97,66 @@ public class HalamanLogin extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     progressdialog.dismiss();
                                     if (task.isSuccessful()) {
-                                        startActivity(new Intent(HalamanLogin.this,LandingPage.class));
-                                        finish();
+                                        Query query = mDb.getReference("profil").orderByChild("id").equalTo(mAuth.getCurrentUser().getUid());
+                                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                if (dataSnapshot.exists()) {
+                                                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                                        mUser = data.getValue(User.class);
+                                                        data.getRef().removeValue();
+                                                        mDb.getReference("profil").push().setValue(mUser);
+                                                        progressdialog.dismiss();
+                                                        Intent i = new Intent(HalamanLogin.this, LandingPage.class);
+                                                        i.putExtra("nama", mUser.getNama());
+                                                        i.putExtra("sd", mUser.getSd());
+                                                        i.putExtra("smp", mUser.getSmp());
+                                                        i.putExtra("sma", mUser.getSma());
+                                                        i.putExtra("kuliah", mUser.getKuliah());
+                                                        i.putExtra("kerja", mUser.getKerja());
+                                                        i.putExtra("nohp", mUser.getNotel());
+                                                        i.putExtra("gambar", mUser.getUrlgambar());
+                                                        finish();
+                                                        startActivity(i);
+                                                    }
+                                                } else {
+                                                    mFuser = mAuth.getCurrentUser();
+                                                    //String nama = mFuser.getDisplayName();
+                                                    String mail = mFuser.getEmail();
+                                                    String id = mFuser.getUid();
+                                                    mUser.setEmail(mail);
+                                                    mUser.setNama("Belum di isi");
+                                                    mUser.setId(id);
+                                                    mUser.setKerja("Belum di isi");
+                                                    mUser.setKuliah("Belum di isi");
+                                                    mUser.setNotel("Belum di isi");
+                                                    mUser.setSd("Belum di isi");
+                                                    mUser.setSmp("Belum di isi");
+                                                    mUser.setSma("Belum di isi");
+                                                    mUser.setUrlgambar("");
+                                                    mDb.getReference("profil").push().setValue(mUser);
+                                                    progressdialog.dismiss();
+                                                    finish();
+                                                    startActivity(new Intent(HalamanLogin.this, HalamanDaftar.class)
+                                                            .putExtra("nama", mUser.getNama())
+                                                            .putExtra("sd", mUser.getSd())
+                                                            .putExtra("smp", mUser.getSmp())
+                                                            .putExtra("sma", mUser.getSma())
+                                                            .putExtra("kuliah", mUser.getKuliah())
+                                                            .putExtra("kerja", mUser.getKerja())
+                                                            .putExtra("nohp", mUser.getNotel())
+                                                            .putExtra("gambar", mUser.getUrlgambar()));
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+                                                Toast.makeText(HalamanLogin.this, "not found", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+
+                                        //startActivity(new Intent(HalamanLogin.this,LandingPage.class));
+                                        //finish();
                                     } else {
                                         Toast.makeText(HalamanLogin.this, "Alamat email / password anda salah !", Toast.LENGTH_SHORT).show();
                                         user.setText("");

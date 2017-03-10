@@ -1,0 +1,272 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/activity_halaman_ubah_profil"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context="com.example.pattimura.wims.HalamanUbahProfil">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbarubahp"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/blue"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Title"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                 />
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+<ImageView
+    android:layout_width="match_parent"
+    app:srcCompat="@android:color/holo_orange_light"
+    android:id="@+id/imageView2"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentStart="true"
+    android:layout_height="220dp" />
+
+<ImageView
+    android:layout_height="100dp"
+    app:srcCompat="@drawable/common_google_signin_btn_icon_dark"
+    android:id="@+id/gambarProfile"
+    android:layout_width="100dp"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="69dp" />
+
+<ImageView
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    app:srcCompat="@drawable/photo"
+    android:layout_marginTop="27dp"
+    android:id="@+id/ubahGambar"
+    android:layout_marginEnd="15dp"
+    android:layout_below="@+id/gambarProfile"
+    android:layout_alignParentEnd="true" />
+
+<TextView
+    android:text="Ubah"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/txtUbahNama"
+    android:textColor="@color/colorPrimary"
+    android:layout_alignBaseline="@+id/edNama"
+    android:layout_alignBottom="@+id/edNama"
+    android:layout_alignEnd="@+id/ubahGambar" />
+
+<TextView
+    android:text="Ubah"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/txtUbahSD"
+    android:layout_alignBaseline="@+id/edSD"
+    android:layout_alignBottom="@+id/edSD"
+    android:layout_alignEnd="@+id/txtUbahNama"
+    android:textColor="@color/colorPrimary" />
+
+<TextView
+    android:text="Ubah"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/txtUbahSMP"
+    android:layout_alignBaseline="@+id/edSMP"
+    android:layout_alignBottom="@+id/edSMP"
+    android:layout_alignEnd="@+id/txtUbahSD"
+    android:textColor="@color/colorPrimary" />
+
+<TextView
+    android:text="Ubah"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/txtUbahSMA"
+    android:layout_alignBaseline="@+id/edSMA"
+    android:layout_alignBottom="@+id/edSMA"
+    android:layout_alignEnd="@+id/txtUbahSMP"
+    android:textColor="@color/colorPrimary" />
+
+<TextView
+    android:text="Ubah"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/txtUbahKuliah"
+    android:layout_alignBaseline="@+id/edKuliah"
+    android:layout_alignBottom="@+id/edKuliah"
+    android:layout_alignEnd="@+id/txtUbahSMA"
+    android:textColor="@color/colorPrimary" />
+
+<TextView
+    android:text="Ubah"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/txtUbahKerja"
+    android:layout_alignBaseline="@+id/edKerja"
+    android:layout_alignBottom="@+id/edKerja"
+    android:layout_alignEnd="@+id/txtUbahKuliah"
+    android:textColor="@color/colorPrimary" />
+
+<TextView
+    android:text="Ubah"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/txtUbahnotel"
+    android:layout_alignBaseline="@+id/edNotel"
+    android:layout_alignBottom="@+id/edNotel"
+    android:layout_alignEnd="@+id/txtUbahKerja"
+    android:textColor="@color/colorPrimary" />
+
+<TextView
+    android:text="SD"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="12dp"
+    android:id="@+id/textView4"
+    android:layout_below="@+id/edNama"
+    android:layout_alignStart="@+id/edNama" />
+
+<TextView
+    android:text="SMP"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="11dp"
+    android:id="@+id/textView6"
+    android:layout_below="@+id/edSD"
+    android:layout_alignStart="@+id/edSD" />
+
+<TextView
+    android:text="SMA"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="11dp"
+    android:id="@+id/textView9"
+    android:layout_below="@+id/edSMP"
+    android:layout_alignStart="@+id/edSMP" />
+
+<TextView
+    android:text="Universitas"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="11dp"
+    android:id="@+id/textView10"
+    android:layout_below="@+id/edSMA"
+    android:layout_alignStart="@+id/edSMA" />
+
+<TextView
+    android:text="Kerja"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="11dp"
+    android:id="@+id/textView11"
+    android:layout_below="@+id/edKuliah"
+    android:layout_alignStart="@+id/edKuliah" />
+
+<TextView
+    android:text="Nama"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="15dp"
+    android:id="@+id/textView2"
+    android:layout_alignBottom="@+id/ubahGambar"
+    android:layout_alignParentStart="true" />
+
+<TextView
+    android:text="No HP"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/textView8"
+    android:layout_below="@+id/edKerja"
+    android:layout_alignStart="@+id/edKerja" />
+
+<EditText
+    android:layout_height="wrap_content"
+    android:inputType="textPersonName"
+    android:ems="10"
+    android:id="@+id/edNama"
+    android:layout_width="wrap_content"
+    android:textSize="10sp"
+    android:layout_below="@+id/textView2"
+    android:layout_alignStart="@+id/textView2"
+    android:layout_toStartOf="@+id/ubahGambar" />
+
+<EditText
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:inputType="textPersonName"
+    android:ems="10"
+    android:id="@+id/edSD"
+    android:textSize="10sp"
+    android:layout_below="@+id/textView4"
+    android:layout_alignStart="@+id/textView4"
+    android:layout_alignEnd="@+id/edNama" />
+
+<EditText
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:inputType="textPersonName"
+    android:ems="10"
+    android:id="@+id/edSMP"
+    android:textSize="10sp"
+    android:layout_below="@+id/textView6"
+    android:layout_alignStart="@+id/textView6"
+    android:layout_alignEnd="@+id/edSD" />
+<EditText
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:inputType="textPersonName"
+    android:ems="10"
+    android:id="@+id/edSMA"
+    android:textSize="10sp"
+    android:layout_below="@+id/textView9"
+    android:layout_alignStart="@+id/textView9"
+    android:layout_alignEnd="@+id/edSMP" />
+
+<EditText
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:inputType="textPersonName"
+    android:ems="10"
+    android:id="@+id/edKuliah"
+    android:textSize="10sp"
+    android:layout_below="@+id/textView10"
+    android:layout_alignStart="@+id/textView10"
+    android:layout_alignEnd="@+id/edSMA" />
+
+<EditText
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:inputType="textPersonName"
+    android:ems="10"
+    android:id="@+id/edKerja"
+    android:textSize="10sp"
+    android:layout_below="@+id/textView11"
+    android:layout_alignStart="@+id/textView11"
+    android:layout_alignEnd="@+id/edKuliah" />
+
+<EditText
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:inputType="textPersonName"
+    android:ems="10"
+    android:id="@+id/edNotel"
+    android:textSize="10sp"
+    android:layout_below="@+id/textView8"
+    android:layout_alignStart="@+id/textView8"
+    android:layout_alignEnd="@+id/edKerja" />
+
+
+
+</RelativeLayout>

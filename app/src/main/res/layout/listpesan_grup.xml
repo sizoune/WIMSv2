@@ -10,44 +10,46 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_avatar_grup"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
         tools:src="@drawable/avatar"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
 
     <TextView
         android:id="@+id/text_view_display_name_grup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Songko"
-
+        tools:text="Nama"
+        android:textColor="@color/black_two"
+        android:paddingLeft="10sp"
         android:layout_alignTop="@+id/img_avatar_grup"
         android:layout_toEndOf="@+id/img_avatar_grup" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/text_view_display_chat_grup"
-        android:textSize="10sp"
-        android:layout_below="@+id/text_view_display_name_grup"
-        android:layout_toEndOf="@+id/img_avatar_personal" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/btn_star"
-        android:id="@+id/imageView"
-        android:layout_alignTop="@+id/text_view_display_name_grup"
-        android:layout_toEndOf="@+id/text_view_display_name_grup"
-        android:layout_alignBottom="@+id/text_view_display_name_grup" />
 
     <TextView
         android:id="@+id/text_view_time_grup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="time"
-        android:layout_alignTop="@+id/img_avatar_grup"
         android:paddingEnd="@dimen/connection_status_padding"
+        android:textSize="12sp"
+        android:layout_marginEnd="15dp"
+        android:layout_alignTop="@+id/text_view_display_name_grup"
         android:layout_alignParentEnd="true"/>
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_view_display_chat_grup"
+        android:textSize="10sp"
+        android:paddingLeft="10sp"
+        android:layout_below="@+id/text_view_display_name_grup"
+        android:layout_toEndOf="@+id/img_avatar_grup" />
+    <ImageView
+        app:srcCompat="@drawable/star"
+        android:id="@+id/imageView"
+        android:layout_width="11dp"
+        android:layout_height="11dp"
+        android:layout_marginLeft="3dp"
+        android:layout_alignBottom="@+id/text_view_time_grup"
+        android:layout_toEndOf="@+id/text_view_display_name_grup" />
 </RelativeLayout>
