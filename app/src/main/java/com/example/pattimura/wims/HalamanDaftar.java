@@ -107,9 +107,11 @@ public class HalamanDaftar extends AppCompatActivity {
                                         mUser.setSd("Belum di isi");
                                         mUser.setSmp("Belum di isi");
                                         mUser.setSma("Belum di isi");
+                                        mUser.setAsal("Belum di isi");
+                                        mUser.setStatus("Belum di isi");
                                         mUser.setUrlgambar("");
                                         mDb.getReference("profil").push().setValue(mUser);
-                                        startActivity(new Intent(HalamanDaftar.this, HalamanUbahProfil.class));
+                                        startActivity(new Intent(HalamanDaftar.this, LandingPage.class));
 
                                     } else {
                                         progressdialog.dismiss();

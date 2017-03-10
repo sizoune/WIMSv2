@@ -41,4 +41,6 @@
     <color name="dodger_blue">#4b9dfc</color>
     <color name="greyish_brown_three">#555555</color>
     <color name="azure">#2196f3</color>
+    <color name="warnatab">#81c784</color>
+    <color name="black_alpha_40">#66000000</color>
 </resources>

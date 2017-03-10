@@ -16,6 +16,7 @@
             android:parentActivityName=".HalamanAwal" />
         <activity
             android:name=".LandingPage"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:label="" />
         <activity android:name=".HalamanAwal">
             <intent-filter>

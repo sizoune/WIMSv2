@@ -64,8 +64,7 @@ public class LandingPage extends AppCompatActivity
             }
         });
         judul = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        judul.setText("Pesan");
-
+//        judul.setText("Pesan");
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         mUser=new User();
@@ -115,7 +114,8 @@ public class LandingPage extends AppCompatActivity
         }*/
 
 
-        fragment = new PesanFragment();
+        fragment = new FragmentDetailProfile();
+        judul.setText("");
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainframe, fragment);
         ft.commit();
@@ -178,7 +178,8 @@ public class LandingPage extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_beranda) {
-            fragment = new PesanFragment();
+            fragment = new FragmentDetailProfile();
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.mainframe, fragment);
             judul.setText("Beranda");
