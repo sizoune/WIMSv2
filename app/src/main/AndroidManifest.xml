@@ -14,7 +14,9 @@
             android:name=".HalamanLogin"
             android:label=""
             android:parentActivityName=".HalamanAwal" />
-        <activity android:name=".LandingPage" />
+        <activity
+            android:name=".LandingPage"
+            android:label="" />
         <activity android:name=".HalamanAwal">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +27,10 @@
         <activity
             android:name=".HalamanDaftar"
             android:label=""
-            android:parentActivityName=".HalamanAwal"></activity>
+            android:parentActivityName=".HalamanAwal" />
+        <activity android:name=".HalamanUbahProfil"
+            android:label=""
+            android:parentActivityName=".LandingPage"/>
     </application>
 
 </manifest>
