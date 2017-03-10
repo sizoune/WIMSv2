@@ -5,9 +5,9 @@ package com.example.pattimura.wims.Model;
  */
 
 public class User {
-    private String id, nama, email, password, notel, sd, smp, sma, kuliah, kerja, urlgambar;
+    private String id, nama, email, password, notel, sd, smp, sma, kuliah, kerja, urlgambar, asal, status;
 
-    public User(String id, String nama, String email, String password, String notel, String sd, String smp, String sma, String kuliah, String kerja, String urlgambar) {
+    public User(String id, String nama, String email, String password, String notel, String sd, String smp, String sma, String kuliah, String kerja, String urlgambar, String asal, String status) {
         this.id = id;
         this.nama = nama;
         this.email = email;
@@ -19,6 +19,8 @@ public class User {
         this.kuliah = kuliah;
         this.kerja = kerja;
         this.urlgambar = urlgambar;
+        this.asal = asal;
+        this.status = status;
     }
 
     public User() {
@@ -110,5 +112,21 @@ public class User {
 
     public void setUrlgambar(String urlgambar) {
         this.urlgambar = urlgambar;
+    }
+
+    public String getAsal() {
+        return asal;
+    }
+
+    public void setAsal(String asal) {
+        this.asal = asal;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
