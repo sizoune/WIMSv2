@@ -1,5 +1,6 @@
 package com.example.pattimura.wims;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -40,9 +42,10 @@ public class LandingPage extends AppCompatActivity
     FragmentManager fm=getSupportFragmentManager();
     TextView judul,namaUser;
     private FirebaseAuth mAuth;
-    private User mUser;
+    private User mUser = new User();
     private FirebaseUser user;
     private FirebaseDatabase database;
+    private ProgressDialog mProgressDialog;
 
 
     @Override
@@ -60,7 +63,7 @@ public class LandingPage extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        View header = navigationView.getHeaderView(0);
+        final View header = navigationView.getHeaderView(0);
         ImageView logout = (ImageView) header.findViewById(R.id.imageViewlogout);
         logout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -73,29 +76,33 @@ public class LandingPage extends AppCompatActivity
 //        judul.setText("Pesan");
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
-        //mUser=new User();
 
+        showProgressDialog();
         database.getReference("profil").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //Iterable<DataSnapshot> children =   dataSnapshot.getChildren();
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot child: dataSnapshot.getChildren()) {
-                        User a = child.getValue(User.class);
-                        if (a.getId().equals(mAuth.getCurrentUser().getUid())) {
-                            mUser=a;
-                            //Toast.makeText(LandingPage.this, a.getNama(), Toast.LENGTH_SHORT).show();
+ 
+
+                    for (DataSnapshot isi : dataSnapshot.getChildren()) {
+                        User mUser = isi.getValue(User.class);
+                        if (mUser.getId().equals(mAuth.getCurrentUser().getUid())) {
+                            namaUser = (TextView) header.findViewById(R.id.username);
+                            //masih kada kawa wil, kd paham kenapa null tarus wkwk
                             if(mUser!=null) {
-                                if (mUser.getNama().equals("Belum di isi") ) {
+                                if (mUser.getNama() == "Belum di isi") {
                                     namaUser.setText(mUser.getEmail());
                                 } else {
                                     namaUser.setText(mUser.getNama());
                                 }
                             }
+
                         }
 
                     }
-
+                            hideProgressDialog();
+                        }
+                    }
 
                 }
             }
@@ -106,24 +113,14 @@ public class LandingPage extends AppCompatActivity
             }
         });
 
-        Bundle b = getIntent().getExtras();
-        /*if (b != null) {
-            mUser = new User();
 
-            mUser.setNama((String) b.get("nama"));
+        fragment = new FragmentDetailProfile();
+        judul.setText("");
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.mainframe, fragment);
+        ft.commit();
 
 
-
-        }*/
-        namaUser = (TextView) header.findViewById(R.id.username);
-        //masih kada kawa wil, kd paham kenapa null tarus wkwk
-        if(mUser!=null) {
-            if (mUser.getNama().equals("Belum di isi") ) {
-                namaUser.setText(mUser.getEmail());
-            } else {
-                namaUser.setText(mUser.getNama());
-            }
-        }
 
 
         /*Bundle b = getIntent().getExtras();
@@ -140,11 +137,7 @@ public class LandingPage extends AppCompatActivity
         }*/
 
 
-        fragment = new FragmentDetailProfile();
-        judul.setText("");
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.mainframe, fragment);
-        ft.commit();
+
 
 
 //        Picasso.with(this)
@@ -195,6 +188,22 @@ public class LandingPage extends AppCompatActivity
         //}
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("Loading...");
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

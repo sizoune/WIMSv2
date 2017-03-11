@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textJudulDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="11dp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/textIsidetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textJudulDetail"
+        android:layout_below="@+id/textJudulDetail"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/azure"
+        android:text="TextView" />
+
+    <ImageView
+        android:id="@+id/imageEdit"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignBottom="@+id/textIsidetail"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="15dp"
+        app:srcCompat="@drawable/flatedit" />
+    <View
+        android:layout_alignStart="@+id/textJudulDetail"
+        android:layout_alignEnd="@+id/imageEdit"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/warm_grey"
+        android:id="@+id/garisAsal"
+        android:layout_below="@+id/textIsidetail" />
+</RelativeLayout>

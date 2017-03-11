@@ -17,12 +17,17 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.pattimura.wims.Adapter.AdapterDetailProfile;
+import com.example.pattimura.wims.Model.BagianUser;
+import com.example.pattimura.wims.Model.User;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,33 +42,31 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class HalamanUbahProfil extends AppCompatActivity implements View.OnClickListener{
+public class HalamanUbahProfil extends AppCompatActivity {
+    private static final int RC_TAKE_PICTURE = 101;
+    private static final int RC_STORAGE_PERMS = 102;
+    private static final String KEY_FILE_URI = "key_file_uri";
+    private static final String KEY_DOWNLOAD_URL = "key_download_url";
+    ArrayList<BagianUser> isiUser = new ArrayList<>();
+    ListView lv;
+    AdapterDetailProfile adapter;
     private EditText ednama, edsd, edsmp, edsma, edkuliah, edkerja, ednohp;
     private TextView txtNama, txtSd, txtSmp, txtSma, txtKuliah, txtKerja, txtNohp;
     private FirebaseAuth mAuth;
     private FirebaseDatabase database;
     private ProgressDialog progressdialog, mProgressDialog;
     private ImageView gambarprof, ubahgambar;
-
-    private static final int RC_TAKE_PICTURE = 101;
-    private static final int RC_STORAGE_PERMS = 102;
-
-    private static final String KEY_FILE_URI = "key_file_uri";
-    private static final String KEY_DOWNLOAD_URL = "key_download_url";
-
     private BroadcastReceiver mDownloadReceiver;
-
     private Uri mDownloadUrl = null;
     private Uri mFileUri = null;
-
     private StorageReference mStorageRef;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,22 +83,89 @@ public class HalamanUbahProfil extends AppCompatActivity implements View.OnClick
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         progressdialog = new ProgressDialog(this);
 
+        lv = (ListView) findViewById(R.id.listprofile);
+
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
 
+        Intent i = getIntent();
+        Bundle b = i.getExtras();
 
+        database.getReference("profil").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    User user = data.getValue(User.class);
+                    if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
+                        isiUser = new ArrayList<>();
+                        isiUser.add(new BagianUser("Nama", user.getNama()));
+                        isiUser.add(new BagianUser("Status", user.getStatus()));
+                        isiUser.add(new BagianUser("Asal", user.getAsal()));
+                        isiUser.add(new BagianUser("No Telepon", user.getNotel()));
+                        isiUser.add(new BagianUser("Sekolah Dasar", user.getSd()));
+                        isiUser.add(new BagianUser("Sekolah Menengah Pertama", user.getSmp()));
+                        isiUser.add(new BagianUser("Sekolah Menengah Atas", user.getSma()));
+                        isiUser.add(new BagianUser("Kuliah", user.getKuliah()));
+                        isiUser.add(new BagianUser("Kerja", user.getKerja()));
+                        adapter = new AdapterDetailProfile(isiUser, HalamanUbahProfil.this);
+                        lv.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        if (b != null) {
+            isiUser = new ArrayList<>();
+            isiUser.add(new BagianUser("Nama", (String) b.get("nama")));
+            isiUser.add(new BagianUser("Status", (String) b.get("status")));
+            isiUser.add(new BagianUser("Asal", (String) b.get("asal")));
+            isiUser.add(new BagianUser("No Telepon", (String) b.get("telpon")));
+            isiUser.add(new BagianUser("Sekolah Dasar", (String) b.get("sd")));
+            isiUser.add(new BagianUser("Sekolah Menengah Pertama", (String) b.get("smp")));
+            isiUser.add(new BagianUser("Sekolah Menengah Atas", (String) b.get("sma")));
+            isiUser.add(new BagianUser("Kuliah", (String) b.get("kuliah")));
+            isiUser.add(new BagianUser("Kerja", (String) b.get("kerja")));
+            adapter = new AdapterDetailProfile(isiUser, this);
+            lv.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position != isiUser.size()) {
+                    BagianUser bu = isiUser.get(position);
+                    Intent i = new Intent(HalamanUbahProfil.this, UbahDetailProfile.class);
+                    if (bu.getJudul().equals("No Telepon")) {
+                        i.putExtra("judul", "notel");
+                    } else if (bu.getJudul().equals("Sekolah Dasar")) {
+                        i.putExtra("judul", "sd");
+                    } else if (bu.getJudul().equals("Sekolah Menengah Pertama")) {
+                        i.putExtra("judul", "smp");
+                    } else if (bu.getJudul().equals("Sekolah Menengah Atas")) {
+                        i.putExtra("judul", "sma");
+                    } else {
+                        i.putExtra("judul", bu.getJudul().toLowerCase());
+                        //Toast.makeText(HalamanUbahProfil.this, bu.getJudul().toLowerCase(), Toast.LENGTH_SHORT).show();
+                    }
+                    i.putExtra("isi", bu.getIsi());
+                    startActivity(i);
+                }
+            }
+        });
     }
 
-    @Override
-    public void onClick(View view) {
-    }
 
     public void disableInput(EditText ed) {
         ed.setInputType(InputType.TYPE_NULL);
         ed.setTextIsSelectable(true);
         ed.setKeyListener(null);
     }
-
 
 
     private void showMessageDialog(String title, String message) {
