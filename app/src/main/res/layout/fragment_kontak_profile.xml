@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="28dp"
         android:layout_marginTop="24dp"
-        app:srcCompat="@drawable/common_google_signin_btn_icon_dark_pressed" />
+        app:srcCompat="@drawable/cell1" />
 
     <TextView
         android:id="@+id/textMobile"
@@ -40,7 +40,7 @@
         android:layout_alignStart="@+id/imageMobile"
         android:layout_below="@+id/imageMobile"
         android:layout_marginTop="50dp"
-        app:srcCompat="@drawable/common_google_signin_btn_icon_dark_normal" />
+        app:srcCompat="@drawable/mail1" />
 
     <TextView
         android:id="@+id/textMail"

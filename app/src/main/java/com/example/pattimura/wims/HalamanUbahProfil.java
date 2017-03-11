@@ -40,6 +40,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -87,6 +88,10 @@ public class HalamanUbahProfil extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+
+        ubahgambar = (ImageView) findViewById(R.id.ubahGambar);
+        gambarprof = (ImageView) findViewById(R.id.gambarProfile);
 
         Intent i = getIntent();
         Bundle b = i.getExtras();
@@ -110,6 +115,13 @@ public class HalamanUbahProfil extends AppCompatActivity {
                         adapter = new AdapterDetailProfile(isiUser, HalamanUbahProfil.this);
                         lv.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
+                        if (!user.getUrlgambar().equals("")) {
+                            Glide.with(getApplicationContext())
+                                    .using(new FirebaseImageLoader())
+                                    .load(mStorageRef.child(user.getUrlgambar()))
+                                    .dontAnimate()
+                                    .into(gambarprof);
+                        }
                     }
                 }
             }
@@ -134,6 +146,13 @@ public class HalamanUbahProfil extends AppCompatActivity {
             adapter = new AdapterDetailProfile(isiUser, this);
             lv.setAdapter(adapter);
             adapter.notifyDataSetChanged();
+            if (!((String) b.get("gambar")).equals("")) {
+                Glide.with(getApplicationContext())
+                        .using(new FirebaseImageLoader())
+                        .load(mStorageRef.child((String) b.get("gambar")))
+                        .dontAnimate()
+                        .into(gambarprof);
+            }
         }
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -156,6 +175,26 @@ public class HalamanUbahProfil extends AppCompatActivity {
                     i.putExtra("isi", bu.getIsi());
                     startActivity(i);
                 }
+            }
+        });
+        ubahgambar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(HalamanUbahProfil.this);
+                builder.setPositiveButton("Ambil Gambar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        launchCamera();
+                    }
+                });
+                builder.setNegativeButton("Pilih dari Galery", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        pickdariGalery();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
     }
@@ -219,90 +258,94 @@ public class HalamanUbahProfil extends AppCompatActivity {
         startActivityForResult(i, 1);
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == 0) {
-//            if (resultCode == RESULT_OK) {
-//                if (mFileUri != null) {
-//                    uploadFromUri(mFileUri);
-//                } else {
-//                    Toast.makeText(this, "File tidak ditemukan", Toast.LENGTH_SHORT).show();
-//                }
-//            } else {
-//                //Toast.makeText(this, "Taking picture failed.", Toast.LENGTH_SHORT).show();
-//            }
-//        } else if (requestCode == 1) {
-//            if (resultCode == RESULT_OK) {
-//                Uri selectedImage = data.getData();
-//                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-//                Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-//                cursor.moveToFirst();
-//                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//                String filePath = cursor.getString(columnIndex);
-//                cursor.close();
-//                File file = new File(filePath);
-//                mFileUri = Uri.fromFile(file);
-//                uploadFromUri(mFileUri);
-//            } else {
-//                //Toast.makeText(this, "Taking picture failed.", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                if (mFileUri != null) {
+                    uploadFromUri(mFileUri);
+                } else {
+                    Toast.makeText(this, "File tidak ditemukan", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                //Toast.makeText(this, "Taking picture failed.", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String filePath = cursor.getString(columnIndex);
+                cursor.close();
+                File file = new File(filePath);
+                mFileUri = Uri.fromFile(file);
+                uploadFromUri(mFileUri);
+            } else {
+                //Toast.makeText(this, "Taking picture failed.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
-//    private void uploadFromUri(Uri fileUri) {
-//        final StorageReference photoRef = mStorageRef.child("images").child(fileUri.getLastPathSegment());
-//        showProgressDialog();
-//        photoRef.putFile(fileUri)
-//                .addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        final String urlgambar = taskSnapshot.getMetadata().getPath();
-//                        Glide.with(getApplicationContext())
-//                                .using(new FirebaseImageLoader())
-//                                .load(photoRef)
-//                                .into(gambarprof);
-//                        hideProgressDialog();
-//                        Query query = database.getReference("profil").orderByChild("id").equalTo(mAuth.getCurrentUser().getUid());
-//                        query.addListenerForSingleValueEvent(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(DataSnapshot dataSnapshot) {
-//                                if (dataSnapshot.exists()) {
-//                                    for (DataSnapshot data : dataSnapshot.getChildren()) {
-//                                        database.getReference("profil").child(data.getKey()).child("urlgambar").setValue(urlgambar);
-//                                    }
-//                                    Query query1 = database.getReference("chat").orderByChild("id").equalTo(mAuth.getCurrentUser().getUid());
-//                                    query1.addValueEventListener(new ValueEventListener() {
-//                                        @Override
-//                                        public void onDataChange(DataSnapshot dataSnapshot) {
-//                                            if (dataSnapshot.exists()) {
-//                                                for (DataSnapshot data : dataSnapshot.getChildren()) {
-//                                                    database.getReference("chat").child(data.getKey()).child("urlgambar").setValue(urlgambar);
-//                                                }
-//                                            }
-//                                        }
-//
-//                                        @Override
-//                                        public void onCancelled(DatabaseError databaseError) {
-//
-//                                        }
-//                                    });
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(DatabaseError databaseError) {
-//
-//                            }
-//                        });
-//                    }
-//                })
-//                .addOnFailureListener(this, new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        hideProgressDialog();
-//                        Toast.makeText(HalamanUbahProfil.this, "Error: upload failed",
-//                                Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
+    private void uploadFromUri(Uri fileUri) {
+        final StorageReference photoRef = mStorageRef.child("images").child(fileUri.getLastPathSegment());
+        showProgressDialog();
+        photoRef.putFile(fileUri)
+                .addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        @SuppressWarnings("VisibleForTests")
+                        final String urlgambar = taskSnapshot.getMetadata().getPath();
+                        Toast.makeText(HalamanUbahProfil.this, urlgambar, Toast.LENGTH_SHORT).show();
+                        Glide.with(getApplicationContext())
+                                .using(new FirebaseImageLoader())
+                                .load(photoRef)
+                                .dontAnimate()
+                                .into(gambarprof);
+                        //Picasso.with(getApplicationContext()).load(urlgambar).into(gambarprof);
+                        hideProgressDialog();
+                        Query query = database.getReference("profil").orderByChild("id").equalTo(mAuth.getCurrentUser().getUid());
+                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
+                                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                        database.getReference("profil").child(data.getKey()).child("urlgambar").setValue(urlgambar);
+                                    }
+                                    Query query1 = database.getReference("chat").orderByChild("id").equalTo(mAuth.getCurrentUser().getUid());
+                                    query1.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.exists()) {
+                                                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                                    database.getReference("chat").child(data.getKey()).child("urlgambar").setValue(urlgambar);
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        hideProgressDialog();
+                        Toast.makeText(HalamanUbahProfil.this, "Error: upload failed",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 }

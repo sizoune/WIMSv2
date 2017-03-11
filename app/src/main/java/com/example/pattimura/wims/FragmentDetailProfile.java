@@ -22,14 +22,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.pattimura.wims.Model.User;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 
 /**
@@ -39,17 +41,17 @@ public class FragmentDetailProfile extends Fragment implements View.OnClickListe
     public static TabLayout tabLayout;
     public static ViewPager viewPager;
     public static int int_items = 2;
-    ImageView tombol;
+    ImageView tombol, gambarprof;
     FirebaseAuth mAuth;
     FirebaseDatabase database;
     ProgressDialog mProgressDialog;
     String idorang;
+    private StorageReference mStorageRef;
+
     public FragmentDetailProfile() {
         // Required empty public constructor
-        idorang=null;
+        idorang = null;
     }
-
-
 
 
     @Override
@@ -59,16 +61,14 @@ public class FragmentDetailProfile extends Fragment implements View.OnClickListe
         View v = inflater.inflate(R.layout.fragment_detail_profile, container, false);
 
         tombol = (ImageView) v.findViewById(R.id.btnEditProfile);
+        gambarprof = (ImageView) v.findViewById(R.id.imageViewProfile);
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
         final TextView nama = (TextView) v.findViewById(R.id.textnamaProfile);
         final TextView asal = (TextView) v.findViewById(R.id.textasalProfile);
         final TextView status = (TextView) v.findViewById(R.id.textstatusProfile);
-
-        if(getArguments().getString("id")!=null){
-            idorang=getArguments().getString("id");
-        }
 
 
         tabLayout = (TabLayout) v.findViewById(R.id.tabs);
@@ -84,26 +84,38 @@ public class FragmentDetailProfile extends Fragment implements View.OnClickListe
 
         tombol.setOnClickListener(this);
         database.getReference("profil").addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(idorang==null) {
+                if (idorang == null) {
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                         User user = data.getValue(User.class);
                         if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
                             nama.setText(user.getNama());
                             asal.setText(user.getAsal());
                             status.setText(user.getStatus());
+                            if (!user.getUrlgambar().equals("")) {
+                                Glide.with(FragmentDetailProfile.this.getContext())
+                                        .using(new FirebaseImageLoader())
+                                        .load(mStorageRef.child(user.getUrlgambar()))
+                                        .dontAnimate()
+                                        .into(gambarprof);
+                            }
                         }
                     }
-                }
-                else{
+                } else {
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                         User user = data.getValue(User.class);
                         if (user.getId().equals(idorang)) {
                             nama.setText(user.getNama());
                             asal.setText(user.getAsal());
                             status.setText(user.getStatus());
+                            if (!user.getUrlgambar().equals("")) {
+                                Glide.with(FragmentDetailProfile.this.getContext())
+                                        .using(new FirebaseImageLoader())
+                                        .load(mStorageRef.child(user.getUrlgambar()))
+                                        .dontAnimate()
+                                        .into(gambarprof);
+                            }
                         }
                     }
                 }
@@ -128,7 +140,7 @@ public class FragmentDetailProfile extends Fragment implements View.OnClickListe
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                         User user = data.getValue(User.class);
 
-                        if(idorang==null) {
+                        if (idorang == null) {
                             if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
                                 Intent i = new Intent(FragmentDetailProfile.this.getContext(), HalamanUbahProfil.class)
                                         .putExtra("nama", user.getNama())
@@ -146,8 +158,7 @@ public class FragmentDetailProfile extends Fragment implements View.OnClickListe
                                 startActivity(i);
                                 break;
                             }
-                        }
-                        else{
+                        } else {
                             if (user.getId().equals(idorang)) {
                                 Intent i = new Intent(FragmentDetailProfile.this.getContext(), HalamanUbahProfil.class)
                                         .putExtra("nama", user.getNama())
