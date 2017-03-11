@@ -16,8 +16,8 @@
             android:parentActivityName=".HalamanAwal" />
         <activity
             android:name=".LandingPage"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:label="" />
+            android:label=""
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity android:name=".HalamanAwal">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,9 +29,14 @@
             android:name=".HalamanDaftar"
             android:label=""
             android:parentActivityName=".HalamanAwal" />
-        <activity android:name=".HalamanUbahProfil"
+        <activity
+            android:name=".HalamanUbahProfil"
             android:label=""
-            android:parentActivityName=".LandingPage"/>
+            android:parentActivityName=".LandingPage" />
+        <activity
+            android:name=".UbahDetailProfile"
+            android:label=""
+            android:parentActivityName=".HalamanUbahProfil"></activity>
     </application>
 
 </manifest>

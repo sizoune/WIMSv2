@@ -133,6 +133,8 @@ public class HalamanLogin extends AppCompatActivity {
                                                     mUser.setSd("Belum di isi");
                                                     mUser.setSmp("Belum di isi");
                                                     mUser.setSma("Belum di isi");
+                                                    mUser.setAsal("Belum di isi");
+                                                    mUser.setStatus("Belum di isi");
                                                     mUser.setUrlgambar("");
                                                     mDb.getReference("profil").push().setValue(mUser);
                                                     progressdialog.dismiss();

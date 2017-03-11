@@ -2,8 +2,10 @@ package com.example.pattimura.wims;
 
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -16,7 +18,15 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.pattimura.wims.Model.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 /**
@@ -27,6 +37,9 @@ public class FragmentDetailProfile extends Fragment implements View.OnClickListe
     public static ViewPager viewPager;
     public static int int_items = 2;
     ImageView tombol;
+    FirebaseAuth mAuth;
+    FirebaseDatabase database;
+    ProgressDialog mProgressDialog;
 
     public FragmentDetailProfile() {
         // Required empty public constructor
@@ -40,6 +53,12 @@ public class FragmentDetailProfile extends Fragment implements View.OnClickListe
         View v = inflater.inflate(R.layout.fragment_detail_profile, container, false);
 
         tombol = (ImageView) v.findViewById(R.id.btnEditProfile);
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+
+        final TextView nama = (TextView) v.findViewById(R.id.textnamaProfile);
+        final TextView asal = (TextView) v.findViewById(R.id.textasalProfile);
+        final TextView status = (TextView) v.findViewById(R.id.textstatusProfile);
 
         tabLayout = (TabLayout) v.findViewById(R.id.tabs);
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
@@ -53,43 +72,79 @@ public class FragmentDetailProfile extends Fragment implements View.OnClickListe
         });
 
         tombol.setOnClickListener(this);
+        database.getReference("profil").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    User user = data.getValue(User.class);
+                    if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
+                        nama.setText(user.getNama());
+                        asal.setText(user.getAsal());
+                        status.setText(user.getStatus());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         return v;
     }
 
     @Override
     public void onClick(View v) {
         if (v == tombol) {
-            Context context = FragmentDetailProfile.this.getContext();
-            AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-            dialog.setTitle("Update status Profile");
-            LinearLayout layout = new LinearLayout(context);
-            layout.setOrientation(LinearLayout.VERTICAL);
-
-            final EditText titleBox = new EditText(context);
-            titleBox.setHint("Status");
-            layout.addView(titleBox);
-
-            final EditText descriptionBox = new EditText(context);
-            descriptionBox.setHint("Asal");
-            layout.addView(descriptionBox);
-            dialog.setView(layout);
-            dialog.setPositiveButton("Ubah", new DialogInterface.OnClickListener() {
+            showProgressDialog();
+            database.getReference("profil").addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                        User user = data.getValue(User.class);
+                        if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
+                            Intent i = new Intent(FragmentDetailProfile.this.getContext(), HalamanUbahProfil.class)
+                                    .putExtra("nama", user.getNama())
+                                    .putExtra("status", user.getStatus())
+                                    .putExtra("asal", user.getAsal())
+                                    .putExtra("sd", user.getSd())
+                                    .putExtra("smp", user.getSmp())
+                                    .putExtra("sma", user.getSma())
+                                    .putExtra("email", user.getEmail())
+                                    .putExtra("kuliah", user.getKuliah())
+                                    .putExtra("kerja", user.getKerja())
+                                    .putExtra("telpon", user.getNotel())
+                                    .putExtra("gambar", user.getUrlgambar());
+                            hideProgressDialog();
+                            startActivity(i);
+                            break;
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
                 }
             });
-            dialog.setNegativeButton("Batal", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            dialog.create();
-            dialog.show();
         }
     }
 
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(FragmentDetailProfile.this.getContext());
+            mProgressDialog.setMessage("Loading...");
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
 
     class MyAdapter extends FragmentPagerAdapter {
 
