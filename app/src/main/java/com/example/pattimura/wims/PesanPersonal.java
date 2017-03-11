@@ -1,10 +1,12 @@
 package com.example.pattimura.wims;
 
+import android.content.Intent;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -15,6 +17,7 @@ import com.example.pattimura.wims.Adapter.AdapterChatGrup;
 import com.example.pattimura.wims.Adapter.AdapterChatPersonal;
 import com.example.pattimura.wims.Model.ChatGrup;
 import com.example.pattimura.wims.Model.ChatPersonal;
+import com.example.pattimura.wims.Model.ListChat;
 import com.example.pattimura.wims.Model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,7 +43,7 @@ public class PesanPersonal extends AppCompatActivity {
     private ListView listpesan;
     private FirebaseUser user;
     private String urlgambar;
-    private String nama, status, namauser;
+    private String nama, status, namauser,idorang;
     private AdapterChatPersonal customAdapter;
     private ArrayList<ChatPersonal> listchat = new ArrayList<>();
     private AdapterChatGrup customAdapter2;
@@ -71,6 +74,7 @@ public class PesanPersonal extends AppCompatActivity {
 
             nama = (String) b.get("namauser");
             namauser = (String) b.get("user");
+            idorang = (String) b.get("idorang");
             final String songko = (String) b.get("status");
             status = songko;
         }
@@ -79,31 +83,75 @@ public class PesanPersonal extends AppCompatActivity {
         TextView judul = (TextView) toolbar.findViewById(R.id.toolbar_title);
         judul.setText(nama);
 
-        database.getReference("chat").child("grup").child(nama).child("pesan").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                listchat2.clear();
-                if(dataSnapshot.exists()) {
-                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+        if(status.equals("grup")) {
+            database.getReference("chat").child("grup").child(nama).child("pesan").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    listchat2 = new ArrayList<>();
+                    if (dataSnapshot.exists()) {
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
 
-                        chat2 = data.getValue(ChatGrup.class);
-                        //Toast.makeText(PesanPersonal.this, data.getValue().toString(), Toast.LENGTH_SHORT).show();
-                        listchat2.add(chat2);
-                        //Toast.makeText(PesanPersonal.this, listchat2.get(0).getNama(), Toast.LENGTH_SHORT).show();
+                            chat2 = data.getValue(ChatGrup.class);
+                            //Toast.makeText(PesanPersonal.this, data.getValue().toString(), Toast.LENGTH_SHORT).show();
+                            listchat2.add(chat2);
+                            //Toast.makeText(PesanPersonal.this, listchat2.get(0).getNama(), Toast.LENGTH_SHORT).show();
+                        }
+                        customAdapter2 = new AdapterChatGrup(listchat2, getApplicationContext(), user);
+                        //Toast.makeText(PesanPersonal.this, customAdapter2.getItem(0).getClass().getName(), Toast.LENGTH_SHORT).show();
+                        customAdapter2.notifyDataSetChanged();
+                        listpesan.setAdapter(customAdapter2);
+                        listpesan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                if (position != listchat2.size()) {
+                                    ChatGrup b = listchat2.get(position);
+                                    Intent i = new Intent(PesanPersonal.this, LandingPage.class);
+                                    i.putExtra("idorang", b.getId());
+                                    i.putExtra("namaorang", b.getNama());
+                                    startActivity(i);
+                                }
+                            }
+                        });
+
                     }
-                    customAdapter2 = new AdapterChatGrup(listchat2, getApplicationContext(), user);
-                    //Toast.makeText(PesanPersonal.this, customAdapter2.getItem(0).getClass().getName(), Toast.LENGTH_SHORT).show();
 
-                    listpesan.setAdapter(customAdapter2);
                 }
 
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }
+        else{
+            database.getReference("chat").child("personal").child(mAuth.getCurrentUser().getUid()).child(nama).child("pesan").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    listchat = new ArrayList<>();
+                    if (dataSnapshot.exists()) {
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
 
-            }
-        });
+                            chat = data.getValue(ChatPersonal.class);
+                            //Toast.makeText(PesanPersonal.this, data.getValue().toString(), Toast.LENGTH_SHORT).show();
+                            listchat.add(chat);
+                            //Toast.makeText(PesanPersonal.this, listchat2.get(0).getNama(), Toast.LENGTH_SHORT).show();
+                        }
+                        customAdapter = new AdapterChatPersonal(listchat, getApplicationContext(), user);
+                        //Toast.makeText(PesanPersonal.this, customAdapter2.getItem(0).getClass().getName(), Toast.LENGTH_SHORT).show();
+
+                        listpesan.setAdapter(customAdapter);
+                        customAdapter.notifyDataSetChanged();
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,8 +163,9 @@ public class PesanPersonal extends AppCompatActivity {
                         database.getReference("chat").child("grup").child(nama).child("pesan").push().setValue(cg);
                         pesan.setText("");
                     } else {
-                        ChatPersonal cc = new ChatPersonal(pesan.getText().toString(), id);
-                        database.getReference("chat").child("grup").child(nama).child("pesan").push().setValue(cc);
+                        ChatPersonal cc = new ChatPersonal(pesan.getText().toString(), id,System.currentTimeMillis(),"");
+                        database.getReference("chat").child("personal").child(mAuth.getCurrentUser().getUid()).child(nama).child("pesan").push().setValue(cc);
+                        database.getReference("chat").child("personal").child(idorang).child(namauser).child("pesan").push().setValue(cc);
                         pesan.setText("");
                     }
                 }

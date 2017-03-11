@@ -20,8 +20,9 @@
         android:layout_height="wrap_content"
         tools:text="Nama"
         android:textColor="@color/black_two"
-        android:paddingLeft="10sp"
+        android:textSize="16sp"
 
+        android:paddingLeft="10sp"
         android:fontFamily="sans-serif"
         android:layout_alignTop="@+id/img_avatar_personal"
         android:layout_toEndOf="@+id/img_avatar_personal" />
