@@ -52,14 +52,13 @@ public class FragmentDetailProfile extends Fragment implements View.OnClickListe
     public static TabLayout tabLayout;
     public static ViewPager viewPager;
     public static int int_items = 2;
+    final LandingPage activity;
     ImageView tombol, gambarprof;
     FirebaseAuth mAuth;
     FirebaseDatabase database;
     ProgressDialog mProgressDialog;
-
-    String idorang, namaorang;
+    String namaorang;
     ListChat lc;
-    final LandingPage activity;
     TextView nama;
 
     String idorang;
@@ -122,50 +121,27 @@ public class FragmentDetailProfile extends Fragment implements View.OnClickListe
         database.getReference("profil").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                     User user = data.getValue(User.class);
                     if (idorang == null) {
-
                         if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
                             nama.setText(user.getNama());
                             asal.setText(user.getAsal());
                             status.setText(user.getStatus());
-
                         }
                     } else if (user.getId().equals(idorang)) {
                         nama.setText(user.getNama());
                         asal.setText(user.getAsal());
                         status.setText(user.getStatus());
 
-
-                            if (!user.getUrlgambar().equals("")) {
-                                Glide.with(FragmentDetailProfile.this.getContext())
-                                        .using(new FirebaseImageLoader())
-                                        .load(mStorageRef.child(user.getUrlgambar()))
-                                        .dontAnimate()
-                                        .into(gambarprof);
-                            }
-                        }
                     }
-                } else {
-                    for (DataSnapshot data : dataSnapshot.getChildren()) {
-                        User user = data.getValue(User.class);
-                        if (user.getId().equals(idorang)) {
-                            nama.setText(user.getNama());
-                            asal.setText(user.getAsal());
-                            status.setText(user.getStatus());
-                            if (!user.getUrlgambar().equals("")) {
-                                Glide.with(FragmentDetailProfile.this.getContext())
-                                        .using(new FirebaseImageLoader())
-                                        .load(mStorageRef.child(user.getUrlgambar()))
-                                        .dontAnimate()
-                                        .into(gambarprof);
-                            }
-                        }
-
+                    if (!user.getUrlgambar().equals("")) {
+                        Glide.with(FragmentDetailProfile.this.getContext())
+                                .using(new FirebaseImageLoader())
+                                .load(mStorageRef.child(user.getUrlgambar()))
+                                .dontAnimate()
+                                .into(gambarprof);
                     }
-
                 }
             }
 
@@ -181,85 +157,43 @@ public class FragmentDetailProfile extends Fragment implements View.OnClickListe
     public void onClick(View v) {
         if (v == tombol) {
             showProgressDialog();
-
             if (idorang != null) {
                 database.getReference("profil").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             final User user = data.getValue(User.class);
-
-                                if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
-                                    database.getReference("chat").child("personal").child(idorang).child(user.getNama()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            lc = new ListChat();
-                                            if (dataSnapshot.exists()) {
-                                                lc.setDisplayName(user.getNama());
-                                                lc.setAvatar("");
-                                                lc.setStatus("personal");
-
-
-                                            } else {
-                                                lc.setDisplayName(user.getNama());
-                                                lc.setAvatar("");
-                                                lc.setStatus("personal");
-
-                                                database.getReference("chat").child("personal").child(idorang).child(user.getNama()).push().setValue(lc);
-
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-
-                                        }
-                                    });
-                                }
-
-
-            Toast.makeText(FragmentDetailProfile.this.getContext(), idorang, Toast.LENGTH_SHORT).show();
-            database.getReference("profil").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot data : dataSnapshot.getChildren()) {
-                        User user = data.getValue(User.class);
-
-                        if (idorang == null) {
                             if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
-                                Intent i = new Intent(FragmentDetailProfile.this.getContext(), HalamanUbahProfil.class)
-                                        .putExtra("nama", user.getNama())
-                                        .putExtra("status", user.getStatus())
-                                        .putExtra("asal", user.getAsal())
-                                        .putExtra("sd", user.getSd())
-                                        .putExtra("smp", user.getSmp())
-                                        .putExtra("sma", user.getSma())
-                                        .putExtra("email", user.getEmail())
-                                        .putExtra("kuliah", user.getKuliah())
-                                        .putExtra("kerja", user.getKerja())
-                                        .putExtra("telpon", user.getNotel())
-                                        .putExtra("gambar", user.getUrlgambar());
-                                hideProgressDialog();
-                                startActivity(i);
-                                break;
-                            }
-                        } else {
-                            if (user.getId().equals(idorang)) {
-                                Intent i = new Intent(FragmentDetailProfile.this.getContext(), HalamanUbahProfil.class)
-                                        .putExtra("nama", user.getNama())
-                                        .putExtra("status", user.getStatus())
-                                        .putExtra("asal", user.getAsal())
-                                        .putExtra("sd", user.getSd())
-                                        .putExtra("smp", user.getSmp())
-                                        .putExtra("sma", user.getSma())
-                                        .putExtra("email", user.getEmail())
-                                        .putExtra("kuliah", user.getKuliah())
-                                        .putExtra("kerja", user.getKerja())
-                                        .putExtra("telpon", user.getNotel())
-                                        .putExtra("gambar", user.getUrlgambar());
-                                hideProgressDialog();
-                                startActivity(i);
-                                break;
+                                database.getReference("chat").child("personal").child(idorang).child(user.getNama()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        lc = new ListChat();
+                                        if (dataSnapshot.exists()) {
+                                            lc.setDisplayName(user.getNama());
+                                            lc.setAvatar("");
+                                            lc.setStatus("personal");
+
+                                        } else {
+                                            lc.setDisplayName(user.getNama());
+                                            lc.setAvatar("");
+                                            lc.setStatus("personal");
+                                            database.getReference("chat").child("personal").child(idorang).child(user.getNama()).push().setValue(lc);
+
+                                        }
+                                        if (!user.getUrlgambar().equals("")) {
+                                            Glide.with(FragmentDetailProfile.this.getContext())
+                                                    .using(new FirebaseImageLoader())
+                                                    .load(mStorageRef.child(user.getUrlgambar()))
+                                                    .dontAnimate()
+                                                    .into(gambarprof);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                             }
 
                         }
@@ -279,30 +213,25 @@ public class FragmentDetailProfile extends Fragment implements View.OnClickListe
                             lc.setDisplayName(namaorang);
                             lc.setAvatar("");
                             lc.setStatus("personal");
-
-
                         } else {
                             lc.setDisplayName(namaorang);
                             lc.setAvatar("");
                             lc.setStatus("personal");
-
                             database.getReference("chat").child("personal").child(mAuth.getCurrentUser().getUid()).child(namaorang).push().setValue(lc);
-
                         }
                         database.getReference("profil").addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 for (DataSnapshot data : dataSnapshot.getChildren()) {
                                     User user = data.getValue(User.class);
-
-                                        if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
-                                            Intent i = new Intent(FragmentDetailProfile.this.getContext(), PesanPersonal.class);
-                                            i.putExtra("namauser", namaorang);
-                                            i.putExtra("idorang",idorang);
-                                            i.putExtra("status", lc.getStatus());
-                                            i.putExtra("user", user.getNama());
-                                            startActivity(i);
-                                        }
+                                    if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
+                                        Intent i = new Intent(FragmentDetailProfile.this.getContext(), PesanPersonal.class);
+                                        i.putExtra("namauser", namaorang);
+                                        i.putExtra("idorang", idorang);
+                                        i.putExtra("status", lc.getStatus());
+                                        i.putExtra("user", user.getNama());
+                                        startActivity(i);
+                                    }
 
                                 }
                             }
@@ -312,7 +241,6 @@ public class FragmentDetailProfile extends Fragment implements View.OnClickListe
 
                             }
                         });
-
 
 
                     }

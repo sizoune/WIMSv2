@@ -46,7 +46,6 @@ public class LandingPage extends AppCompatActivity
     FragmentManager fm = getSupportFragmentManager();
     TextView judul, namaUser;
     ImageView gambarprof;
-    String idorang;
     private FirebaseAuth mAuth;
     private User mUser = new User();
     private FirebaseUser user;

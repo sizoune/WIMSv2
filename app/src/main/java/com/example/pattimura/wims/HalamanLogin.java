@@ -63,10 +63,12 @@ public class HalamanLogin extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         judul.setText("Masuk");
-        TextView textView = (TextView) findViewById(R.id.textView3);
+        TextView textView = (TextView) findViewById(R.id.textDaftarlogin);
         SpannableString content = new SpannableString("lupa kata sandi?");
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         textView.setText(content);
+
+
 
         mUser = new User();
         mAuth = FirebaseAuth.getInstance();
@@ -168,6 +170,13 @@ public class HalamanLogin extends AppCompatActivity {
                                 }
                             });
                 }
+            }
+        });
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HalamanLogin.this,HalamanDaftar.class));
             }
         });
 
