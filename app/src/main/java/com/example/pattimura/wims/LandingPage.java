@@ -235,7 +235,7 @@ public class LandingPage extends AppCompatActivity
     }
 
     public String getNama() {
-        return mUser.getNama();
+        return namaUser.getText().toString();
     }
 
 }
