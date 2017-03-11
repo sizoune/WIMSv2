@@ -69,5 +69,7 @@
         android:layout_marginBottom="5dp"
         android:id="@+id/ListChat"
         android:background="#C5EFF7"
+        android:transcriptMode="alwaysScroll"
+        android:stackFromBottom="true"
         android:layout_below="@+id/appBarLayout" />
 </RelativeLayout>
