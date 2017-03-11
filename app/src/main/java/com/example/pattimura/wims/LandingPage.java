@@ -39,8 +39,8 @@ public class LandingPage extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Fragment fragment;
-    FragmentManager fm=getSupportFragmentManager();
-    TextView judul,namaUser;
+    FragmentManager fm = getSupportFragmentManager();
+    TextView judul, namaUser;
     private FirebaseAuth mAuth;
     private User mUser = new User();
     private FirebaseUser user;
@@ -82,31 +82,25 @@ public class LandingPage extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //Iterable<DataSnapshot> children =   dataSnapshot.getChildren();
- 
-
-                    for (DataSnapshot isi : dataSnapshot.getChildren()) {
-                        User mUser = isi.getValue(User.class);
-                        if (mUser.getId().equals(mAuth.getCurrentUser().getUid())) {
-                            namaUser = (TextView) header.findViewById(R.id.username);
-                            //masih kada kawa wil, kd paham kenapa null tarus wkwk
-                            if(mUser!=null) {
-                                if (mUser.getNama() == "Belum di isi") {
-                                    namaUser.setText(mUser.getEmail());
-                                } else {
-                                    namaUser.setText(mUser.getNama());
-                                }
+                for (DataSnapshot isi : dataSnapshot.getChildren()) {
+                    User mUser = isi.getValue(User.class);
+                    if (mUser.getId().equals(mAuth.getCurrentUser().getUid())) {
+                        namaUser = (TextView) header.findViewById(R.id.username);
+                        //masih kada kawa wil, kd paham kenapa null tarus wkwk
+                        if (mUser != null) {
+                            if (mUser.getNama() == "Belum di isi") {
+                                namaUser.setText(mUser.getEmail());
+                            } else {
+                                namaUser.setText(mUser.getNama());
                             }
-
                         }
 
-                    }
-                            hideProgressDialog();
-                        }
                     }
 
                 }
-            }
+                hideProgressDialog();
 
+            }
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -135,9 +129,6 @@ public class LandingPage extends AppCompatActivity
 
 
         }*/
-
-
-
 
 
 //        Picasso.with(this)
