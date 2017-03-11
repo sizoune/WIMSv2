@@ -52,11 +52,19 @@ public class LandingPage extends AppCompatActivity
     private FirebaseUser user;
     private FirebaseDatabase database;
     private ProgressDialog mProgressDialog;
-    private StorageReference mStorageRef;
+
+    String idorang,namaorang;
+
+
+   private StorageReference mStorageRef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        idorang=null;
+        namaorang=null;
 
         setContentView(R.layout.activity_landing_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -124,17 +132,20 @@ public class LandingPage extends AppCompatActivity
         });
 
         Bundle b = getIntent().getExtras();
-        if (b != null) {
-            idorang = (String) b.get("idorang");
 
-
+        if(b!=null){
+            if(b.get("idorang")!=null){
+                idorang=(String) b.get("idorang");
+                namaorang=(String) b.get("namaorang");
+            }
         }
-
         fragment = new FragmentDetailProfile();
         judul.setText("");
-        if (idorang != null) {
+        if(idorang!=null){
             Bundle args = new Bundle();
-            args.putString("id", idorang);
+            args.putString("idorang",idorang);
+            args.putString("namaorang",namaorang);
+            args.putString("namabener",mUser.getNama());
             fragment.setArguments(args);
         }
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

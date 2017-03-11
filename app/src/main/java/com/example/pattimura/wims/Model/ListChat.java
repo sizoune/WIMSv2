@@ -11,9 +11,9 @@ public class ListChat {
     private String status;
     private String avatar;
     private String user;
-    /*private String message;
+    private String message;
     private long time;
-    private String formattedTime;*/
+    private String formattedTime;
 
     /*public ListChat(String displayName, String status, String avatar, String message, long time) {
         this.displayName = displayName;
@@ -75,7 +75,7 @@ public class ListChat {
         this.avatar = avatar;
     }
 
-    /*public long getTime() {
+    public long getTime() {
         return time;
     }
 
@@ -98,9 +98,9 @@ public class ListChat {
         long timeDifference = System.currentTimeMillis() - time;
 
         if(timeDifference < oneDayInMillis){
-            formattedTime = DateFormat.format("hh:mm a", time).toString();
+            formattedTime = DateFormat.format("kk:mm", time).toString();
         }else{
-            formattedTime = DateFormat.format("dd MMM - hh:mm a", time).toString();
+            formattedTime = DateFormat.format("dd MMM - kk:mm", time).toString();
         }
     }
 
@@ -113,9 +113,9 @@ public class ListChat {
         long timeDifference = System.currentTimeMillis() - time;
 
         if(timeDifference < oneDayInMillis){
-            return DateFormat.format("hh:mm a", time).toString();
+            return DateFormat.format("kk:mm", time).toString();
         }else{
-            return DateFormat.format("dd MMM - hh:mm a", time).toString();
+            return DateFormat.format("dd MMM - kk:mm", time).toString();
         }
-    }*/
+    }
 }

@@ -2,6 +2,7 @@ package com.example.pattimura.wims;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.pattimura.wims.Adapter.AdapterChatGrup;
 import com.example.pattimura.wims.Adapter.AdapterListChat;
+import com.example.pattimura.wims.Model.ChatGrup;
 import com.example.pattimura.wims.Model.ListChat;
 import com.example.pattimura.wims.Model.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +38,7 @@ import java.util.List;
  */
 public class PesanFragment extends Fragment {
     ArrayList<ListChat> daftarChat;
+    ChatGrup cg;
     ListChat lc,lcc;
     AdapterListChat adapter;
     ListView lv;
@@ -70,7 +74,7 @@ public class PesanFragment extends Fragment {
         database.getReference("profil").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                daftarChat = new ArrayList<>();
                 if (dataSnapshot.exists()) {
 
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
@@ -230,6 +234,84 @@ public class PesanFragment extends Fragment {
                                 });
                             }
 
+                            try{
+                                database.getReference("chat").child("personal").child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        lc=new ListChat();
+
+                                        if (dataSnapshot.exists()) {
+                                            for(DataSnapshot data:dataSnapshot.getChildren()){
+                                                //Toast.makeText(PesanFragment.this.getContext(), data.getKey(), Toast.LENGTH_SHORT).show();
+                                                //lc = data.getValue(ListChat.class);
+
+                                                lcc = new ListChat(data.getKey(),"personal","");
+                                                lcc.setUser(activity.getNama());
+                                                daftarChat.add(lcc);
+                                            }
+                                            /*lc.setDisplayName(dataSnapshot.getChildren().iterator().);
+                                            lc.setAvatar("");
+                                            lc.setStatus("personal");*/
+
+
+                                        }
+                                        adapter = new AdapterListChat(daftarChat, PesanFragment.this.getContext());
+                                        lv = (ListView) v.findViewById(R.id.listPesan);
+                                        lv.setAdapter(adapter);
+
+                                        adapter.notifyDataSetChanged();
+                                        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                            @Override
+                                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                                if (position != daftarChat.size()) {
+                                                    final ListChat b = daftarChat.get(position);
+                                                    database.getReference("profil").addValueEventListener(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                                            for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                                                User user = data.getValue(User.class);
+
+                                                                if (user.getNama().equals(b.getDisplayName())) {
+                                                                    Intent i = new Intent(PesanFragment.this.getContext(), PesanPersonal.class);
+                                                                    i.putExtra("namauser", b.getDisplayName());
+                                                                    i.putExtra("idorang",user.getId());
+                                                                    i.putExtra("status", b.getStatus());
+                                                                    i.putExtra("user", b.getUser());
+                                                                    startActivity(i);
+                                                                }
+
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+
+                                                        }
+                                                    });
+                                                    Intent i = new Intent(PesanFragment.this.getContext(), PesanPersonal.class);
+                                                    i.putExtra("namauser", b.getDisplayName());
+                                                    i.putExtra("status", b.getStatus());
+                                                    i.putExtra("user", b.getUser());
+                                                    startActivity(i);
+                                                }
+                                            }
+                                        });
+                                        adapter.notifyDataSetChanged();
+
+
+
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }catch (Exception e){
+
+                            }
+
 
                             //AdapterListChat = new CustomAdapter(listchat,getApplicationContext(),user);
                             //listpesan.setAdapter(customAdapter);
@@ -237,24 +319,8 @@ public class PesanFragment extends Fragment {
 
 
                         }
-                        adapter = new AdapterListChat(daftarChat, PesanFragment.this.getContext());
-                        lv = (ListView) v.findViewById(R.id.listPesan);
-                        lv.setAdapter(adapter);
 
-                        adapter.notifyDataSetChanged();
-                        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                if (position != daftarChat.size()) {
-                                    ListChat b = daftarChat.get(position);
-                                    Intent i = new Intent(PesanFragment.this.getContext(), PesanPersonal.class);
-                                    i.putExtra("namauser", b.getDisplayName());
-                                    i.putExtra("status", b.getStatus());
-                                    i.putExtra("user", b.getUser());
-                                    startActivity(i);
-                                }
-                            }
-                        });
+
                     }
 
                 }

@@ -43,6 +43,9 @@
             android:parentActivityName=".LandingPage"/>
 
         <activity android:name=".PesanPersonal"
+            android:label=""
+
+            android:parentActivityName=".LandingPage"
             />
 
     </application>
