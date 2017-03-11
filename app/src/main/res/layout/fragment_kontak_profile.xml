@@ -1,13 +1,62 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.pattimura.wims.FragmentKontakProfile">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <ImageView
+        android:id="@+id/imageMobile"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="24dp"
+        app:srcCompat="@drawable/cell1" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/textMobile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageMobile"
+        android:layout_marginStart="31dp"
+        android:layout_toEndOf="@+id/imageMobile"
+        android:textColor="@color/black"
+        android:text="-" />
+
+    <TextView
+        android:id="@+id/textMobile1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageMobile"
+        android:layout_alignStart="@+id/textMobile"
+        android:text="Mobile" />
+
+    <ImageView
+        android:id="@+id/imageMail"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignStart="@+id/imageMobile"
+        android:layout_below="@+id/imageMobile"
+        android:layout_marginTop="50dp"
+        app:srcCompat="@drawable/mail1" />
+
+    <TextView
+        android:id="@+id/textMail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textMobile1"
+        android:layout_alignTop="@+id/imageMail"
+        android:textColor="@color/black"
+        android:text="-" />
+
+    <TextView
+        android:id="@+id/textMail1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageMail"
+        android:layout_alignStart="@+id/textMail"
+        android:text="Email" />
+
+</RelativeLayout>

@@ -115,6 +115,24 @@ public class PesanPersonal extends AppCompatActivity {
 
                     }
 
+
+                    customAdapter2 = new AdapterChatGrup(listchat2, getApplicationContext(), user);
+
+                    //Toast.makeText(PesanPersonal.this, customAdapter2.getItem(0).getClass().getName(), Toast.LENGTH_SHORT).show();
+
+                    listpesan.setAdapter(customAdapter2);
+                    customAdapter2.notifyDataSetChanged();
+                    listpesan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            if (position != listchat2.size()) {
+                                ChatGrup b = listchat2.get(position);
+                                Intent i = new Intent(PesanPersonal.this, LandingPage.class);
+                                i.putExtra("idorang", b.getId());
+                                startActivity(i);
+                            }
+                        }
+                    });
                 }
 
                 @Override

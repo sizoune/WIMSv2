@@ -25,7 +25,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_weight="1"
-            android:src="@drawable/user_pacific" />
+            android:src="@drawable/avatar" />
         <TextView
             android:id="@+id/username"
             android:layout_width="wrap_content"

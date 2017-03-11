@@ -46,7 +46,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="69dp"
-        android:src="@drawable/user_pacific"
+        android:src="@drawable/avatar"
         app:civ_border_width="2dp"
         app:civ_border_color="#FF000000"/>
 
