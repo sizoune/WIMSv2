@@ -1,10 +1,12 @@
 package com.example.pattimura.wims;
 
+import android.content.Intent;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -15,6 +17,7 @@ import com.example.pattimura.wims.Adapter.AdapterChatGrup;
 import com.example.pattimura.wims.Adapter.AdapterChatPersonal;
 import com.example.pattimura.wims.Model.ChatGrup;
 import com.example.pattimura.wims.Model.ChatPersonal;
+import com.example.pattimura.wims.Model.ListChat;
 import com.example.pattimura.wims.Model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -92,9 +95,22 @@ public class PesanPersonal extends AppCompatActivity {
                         //Toast.makeText(PesanPersonal.this, listchat2.get(0).getNama(), Toast.LENGTH_SHORT).show();
                     }
                     customAdapter2 = new AdapterChatGrup(listchat2, getApplicationContext(), user);
+
                     //Toast.makeText(PesanPersonal.this, customAdapter2.getItem(0).getClass().getName(), Toast.LENGTH_SHORT).show();
 
                     listpesan.setAdapter(customAdapter2);
+                    customAdapter2.notifyDataSetChanged();
+                    listpesan.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            if (position != listchat2.size()) {
+                                ChatGrup b = listchat2.get(position);
+                                Intent i = new Intent(PesanPersonal.this, LandingPage.class);
+                                i.putExtra("idorang", b.getId());
+                                startActivity(i);
+                            }
+                        }
+                    });
                 }
 
             }

@@ -161,7 +161,7 @@ public class HalamanLogin extends AppCompatActivity {
                                         //finish();
                                     } else {
                                         Toast.makeText(HalamanLogin.this, "Alamat email / password anda salah !", Toast.LENGTH_SHORT).show();
-                                        user.setText("");
+
                                         pass.setText("");
                                         return;
                                     }

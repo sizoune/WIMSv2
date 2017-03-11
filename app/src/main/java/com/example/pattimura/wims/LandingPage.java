@@ -46,6 +46,7 @@ public class LandingPage extends AppCompatActivity
     private FirebaseUser user;
     private FirebaseDatabase database;
     private ProgressDialog mProgressDialog;
+    String idorang;
 
 
     @Override
@@ -107,9 +108,21 @@ public class LandingPage extends AppCompatActivity
             }
         });
 
+        Bundle b = getIntent().getExtras();
+        if (b != null) {
+            idorang=(String) b.get("idorang");
+
+
+
+        }
 
         fragment = new FragmentDetailProfile();
         judul.setText("");
+        if(idorang!=null) {
+            Bundle args = new Bundle();
+            args.putString("id", idorang);
+            fragment.setArguments(args);
+        }
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainframe, fragment);
         ft.commit();

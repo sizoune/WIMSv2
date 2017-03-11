@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.solver.SolverVariable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -29,6 +30,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
+
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -40,10 +43,13 @@ public class FragmentDetailProfile extends Fragment implements View.OnClickListe
     FirebaseAuth mAuth;
     FirebaseDatabase database;
     ProgressDialog mProgressDialog;
-
+    String idorang;
     public FragmentDetailProfile() {
         // Required empty public constructor
+        idorang=null;
     }
+
+
 
 
     @Override
@@ -60,6 +66,11 @@ public class FragmentDetailProfile extends Fragment implements View.OnClickListe
         final TextView asal = (TextView) v.findViewById(R.id.textasalProfile);
         final TextView status = (TextView) v.findViewById(R.id.textstatusProfile);
 
+        if(getArguments().getString("id")!=null){
+            idorang=getArguments().getString("id");
+        }
+
+
         tabLayout = (TabLayout) v.findViewById(R.id.tabs);
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
         viewPager.setAdapter(new MyAdapter(getChildFragmentManager()));
@@ -73,14 +84,27 @@ public class FragmentDetailProfile extends Fragment implements View.OnClickListe
 
         tombol.setOnClickListener(this);
         database.getReference("profil").addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot data : dataSnapshot.getChildren()) {
-                    User user = data.getValue(User.class);
-                    if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
-                        nama.setText(user.getNama());
-                        asal.setText(user.getAsal());
-                        status.setText(user.getStatus());
+                if(idorang==null) {
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                        User user = data.getValue(User.class);
+                        if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
+                            nama.setText(user.getNama());
+                            asal.setText(user.getAsal());
+                            status.setText(user.getStatus());
+                        }
+                    }
+                }
+                else{
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                        User user = data.getValue(User.class);
+                        if (user.getId().equals(idorang)) {
+                            nama.setText(user.getNama());
+                            asal.setText(user.getAsal());
+                            status.setText(user.getStatus());
+                        }
                     }
                 }
             }
@@ -97,27 +121,50 @@ public class FragmentDetailProfile extends Fragment implements View.OnClickListe
     public void onClick(View v) {
         if (v == tombol) {
             showProgressDialog();
+            Toast.makeText(FragmentDetailProfile.this.getContext(), idorang, Toast.LENGTH_SHORT).show();
             database.getReference("profil").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                         User user = data.getValue(User.class);
-                        if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
-                            Intent i = new Intent(FragmentDetailProfile.this.getContext(), HalamanUbahProfil.class)
-                                    .putExtra("nama", user.getNama())
-                                    .putExtra("status", user.getStatus())
-                                    .putExtra("asal", user.getAsal())
-                                    .putExtra("sd", user.getSd())
-                                    .putExtra("smp", user.getSmp())
-                                    .putExtra("sma", user.getSma())
-                                    .putExtra("email", user.getEmail())
-                                    .putExtra("kuliah", user.getKuliah())
-                                    .putExtra("kerja", user.getKerja())
-                                    .putExtra("telpon", user.getNotel())
-                                    .putExtra("gambar", user.getUrlgambar());
-                            hideProgressDialog();
-                            startActivity(i);
-                            break;
+
+                        if(idorang==null) {
+                            if (user.getId().equals(mAuth.getCurrentUser().getUid())) {
+                                Intent i = new Intent(FragmentDetailProfile.this.getContext(), HalamanUbahProfil.class)
+                                        .putExtra("nama", user.getNama())
+                                        .putExtra("status", user.getStatus())
+                                        .putExtra("asal", user.getAsal())
+                                        .putExtra("sd", user.getSd())
+                                        .putExtra("smp", user.getSmp())
+                                        .putExtra("sma", user.getSma())
+                                        .putExtra("email", user.getEmail())
+                                        .putExtra("kuliah", user.getKuliah())
+                                        .putExtra("kerja", user.getKerja())
+                                        .putExtra("telpon", user.getNotel())
+                                        .putExtra("gambar", user.getUrlgambar());
+                                hideProgressDialog();
+                                startActivity(i);
+                                break;
+                            }
+                        }
+                        else{
+                            if (user.getId().equals(idorang)) {
+                                Intent i = new Intent(FragmentDetailProfile.this.getContext(), HalamanUbahProfil.class)
+                                        .putExtra("nama", user.getNama())
+                                        .putExtra("status", user.getStatus())
+                                        .putExtra("asal", user.getAsal())
+                                        .putExtra("sd", user.getSd())
+                                        .putExtra("smp", user.getSmp())
+                                        .putExtra("sma", user.getSma())
+                                        .putExtra("email", user.getEmail())
+                                        .putExtra("kuliah", user.getKuliah())
+                                        .putExtra("kerja", user.getKerja())
+                                        .putExtra("telpon", user.getNotel())
+                                        .putExtra("gambar", user.getUrlgambar());
+                                hideProgressDialog();
+                                startActivity(i);
+                                break;
+                            }
                         }
                     }
                 }
