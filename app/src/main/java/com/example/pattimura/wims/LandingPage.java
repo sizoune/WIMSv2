@@ -45,18 +45,13 @@ public class LandingPage extends AppCompatActivity
     Fragment fragment;
     FragmentManager fm = getSupportFragmentManager();
     TextView judul, namaUser;
-    ImageView gambarprof;
     private FirebaseAuth mAuth;
     private User mUser = new User();
     private FirebaseUser user;
     private FirebaseDatabase database;
     private ProgressDialog mProgressDialog;
-
     String idorang,namaorang;
-
-
-   private StorageReference mStorageRef;
-
+    StorageReference mStorageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +80,12 @@ public class LandingPage extends AppCompatActivity
                 alertdFragment.show(fm, "Alert Dialog Fragment");
             }
         });
+        final ImageView gambarprof = (ImageView) header.findViewById(R.id.imageView2);
         judul = (TextView) toolbar.findViewById(R.id.toolbar_title);
 //        judul.setText("Pesan");
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         mStorageRef = FirebaseStorage.getInstance().getReference();
-        gambarprof = (ImageView) header.findViewById(R.id.imageView2);
 
         showProgressDialog();
         database.getReference("profil").addValueEventListener(new ValueEventListener() {
@@ -101,13 +96,6 @@ public class LandingPage extends AppCompatActivity
                     User mUser = isi.getValue(User.class);
                     if (mUser.getId().equals(mAuth.getCurrentUser().getUid())) {
                         namaUser = (TextView) header.findViewById(R.id.username);
-                        if (!mUser.getUrlgambar().equals("")) {
-                            Glide.with(getApplicationContext())
-                                    .using(new FirebaseImageLoader())
-                                    .load(mStorageRef.child(mUser.getUrlgambar()))
-                                    .dontAnimate()
-                                    .into(gambarprof);
-                        }
                         //masih kada kawa wil, kd paham kenapa null tarus wkwk
                         if (mUser != null) {
                             if (mUser.getNama() == "Belum di isi") {
@@ -116,6 +104,13 @@ public class LandingPage extends AppCompatActivity
                                 namaUser.setText(mUser.getNama());
                             }
                         }
+                        if (!mUser.getUrlgambar().equals("")) {
+                            Glide.with(getApplicationContext())
+                                    .using(new FirebaseImageLoader())
+                                    .load(mStorageRef.child(mUser.getUrlgambar()))
+                                    .dontAnimate()
+                                    .into(gambarprof);
+                        }
 
                     }
 
@@ -123,7 +118,6 @@ public class LandingPage extends AppCompatActivity
                 hideProgressDialog();
 
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -131,7 +125,6 @@ public class LandingPage extends AppCompatActivity
         });
 
         Bundle b = getIntent().getExtras();
-
         if(b!=null){
             if(b.get("idorang")!=null){
                 idorang=(String) b.get("idorang");

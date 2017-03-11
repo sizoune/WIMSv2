@@ -100,7 +100,7 @@ public class PesanFragment extends Fragment {
                                             lc.setDisplayName(mUser.getSd());
                                             lc.setAvatar("");
                                             lc.setStatus("grup");
-                                           // Toast.makeText(PesanFragment.this.getContext(), "sd masuk", Toast.LENGTH_SHORT).show();
+                                            // Toast.makeText(PesanFragment.this.getContext(), "sd masuk", Toast.LENGTH_SHORT).show();
                                             database.getReference("chat").child("grup").child(lc.getDisplayName()).push().setValue(lc);
                                         }
 
@@ -247,7 +247,8 @@ public class PesanFragment extends Fragment {
 
                                                 lcc = new ListChat(data.getKey(),"personal","");
                                                 lcc.setUser(activity.getNama());
-                                                daftarChat.add(lcc);
+                                                if(!daftarChat.get(daftarChat.size()-1).getDisplayName().equals(lcc.getDisplayName()))
+                                                    daftarChat.add(lcc);
                                             }
                                             /*lc.setDisplayName(dataSnapshot.getChildren().iterator().);
                                             lc.setAvatar("");
@@ -278,6 +279,15 @@ public class PesanFragment extends Fragment {
                                                                     i.putExtra("status", b.getStatus());
                                                                     i.putExtra("user", b.getUser());
                                                                     startActivity(i);
+                                                                    break;
+                                                                }else{
+                                                                    Intent i = new Intent(PesanFragment.this.getContext(), PesanPersonal.class);
+                                                                    i.putExtra("namauser", b.getDisplayName());
+
+                                                                    i.putExtra("status", b.getStatus());
+                                                                    i.putExtra("user", b.getUser());
+                                                                    startActivity(i);
+                                                                    break;
                                                                 }
 
                                                             }
@@ -288,11 +298,7 @@ public class PesanFragment extends Fragment {
 
                                                         }
                                                     });
-                                                    Intent i = new Intent(PesanFragment.this.getContext(), PesanPersonal.class);
-                                                    i.putExtra("namauser", b.getDisplayName());
-                                                    i.putExtra("status", b.getStatus());
-                                                    i.putExtra("user", b.getUser());
-                                                    startActivity(i);
+
                                                 }
                                             }
                                         });

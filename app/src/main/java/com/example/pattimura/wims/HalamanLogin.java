@@ -64,7 +64,7 @@ public class HalamanLogin extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         judul.setText("Masuk");
         TextView textView = (TextView) findViewById(R.id.textDaftarlogin);
-        SpannableString content = new SpannableString("lupa kata sandi?");
+        SpannableString content = new SpannableString("belum mendaftar ? klik disini");
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         textView.setText(content);
 
