@@ -23,8 +23,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static com.example.pattimura.wims.R.layout.nav_header_landing_page;
 
@@ -38,6 +43,7 @@ public class LandingPage extends AppCompatActivity
     private User mUser;
     private FirebaseUser user;
     private FirebaseDatabase database;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,18 +73,29 @@ public class LandingPage extends AppCompatActivity
 //        judul.setText("Pesan");
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
-        mUser=new User();
-        Query query = database.getReference("profil").orderByChild("id").equalTo(mAuth.getCurrentUser().getUid());
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        //mUser=new User();
+
+        database.getReference("profil").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                //Iterable<DataSnapshot> children =   dataSnapshot.getChildren();
                 if (dataSnapshot.exists()) {
-
-                    for (DataSnapshot data : dataSnapshot.getChildren()) {
-                        mUser = data.getValue(User.class);
-                       
+                    for (DataSnapshot child: dataSnapshot.getChildren()) {
+                        User a = child.getValue(User.class);
+                        if (a.getId().equals(mAuth.getCurrentUser().getUid())) {
+                            mUser=a;
+                            //Toast.makeText(LandingPage.this, a.getNama(), Toast.LENGTH_SHORT).show();
+                            if(mUser!=null) {
+                                if (mUser.getNama().equals("Belum di isi") ) {
+                                    namaUser.setText(mUser.getEmail());
+                                } else {
+                                    namaUser.setText(mUser.getNama());
+                                }
+                            }
+                        }
 
                     }
+
 
                 }
             }
@@ -89,16 +106,25 @@ public class LandingPage extends AppCompatActivity
             }
         });
 
+        Bundle b = getIntent().getExtras();
+        /*if (b != null) {
+            mUser = new User();
 
+            mUser.setNama((String) b.get("nama"));
+
+
+
+        }*/
         namaUser = (TextView) header.findViewById(R.id.username);
         //masih kada kawa wil, kd paham kenapa null tarus wkwk
         if(mUser!=null) {
-            if (mUser.getNama() == "Belum di isi") {
+            if (mUser.getNama().equals("Belum di isi") ) {
                 namaUser.setText(mUser.getEmail());
             } else {
                 namaUser.setText(mUser.getNama());
             }
         }
+
 
         /*Bundle b = getIntent().getExtras();
         if (b != null) {
@@ -206,6 +232,10 @@ public class LandingPage extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public String getNama() {
+        return mUser.getNama();
     }
 
 }

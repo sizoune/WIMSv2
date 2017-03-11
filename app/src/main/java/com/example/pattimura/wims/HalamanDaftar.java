@@ -95,10 +95,10 @@ public class HalamanDaftar extends AppCompatActivity {
                                         progressdialog.dismiss();
                                         finish();
                                         mFuser = mAuth.getCurrentUser();
-                                        String nama = mFuser.getDisplayName();
+                                        //String nama = mFuser.getDisplayName();
                                         String mail = mFuser.getEmail();
                                         String id = mFuser.getUid();
-                                        mUser.setNama(nama);
+                                        mUser.setNama("Belum di isi");
                                         mUser.setEmail(mail);
                                         mUser.setId(id);
                                         mUser.setKerja("Belum di isi");

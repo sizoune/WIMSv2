@@ -81,6 +81,7 @@
                     android:layout_below="@+id/message_text"
                     android:paddingLeft="2dp"
                     android:text="23:30"
+                    android:textColor="@color/warm_grey_two"
                     android:textSize="4pt"
                     />
             </LinearLayout>
