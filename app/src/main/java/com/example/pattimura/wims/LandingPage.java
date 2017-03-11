@@ -25,8 +25,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static com.example.pattimura.wims.R.layout.nav_header_landing_page;
 
@@ -41,6 +46,7 @@ public class LandingPage extends AppCompatActivity
     private FirebaseUser user;
     private FirebaseDatabase database;
     private ProgressDialog mProgressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +76,14 @@ public class LandingPage extends AppCompatActivity
 //        judul.setText("Pesan");
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
+
         showProgressDialog();
         database.getReference("profil").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
+                //Iterable<DataSnapshot> children =   dataSnapshot.getChildren();
+ 
+
                     for (DataSnapshot isi : dataSnapshot.getChildren()) {
                         User mUser = isi.getValue(User.class);
                         if (mUser.getId().equals(mAuth.getCurrentUser().getUid())) {
@@ -87,9 +96,14 @@ public class LandingPage extends AppCompatActivity
                                     namaUser.setText(mUser.getNama());
                                 }
                             }
+
+                        }
+
+                    }
                             hideProgressDialog();
                         }
                     }
+
                 }
             }
 
@@ -99,11 +113,14 @@ public class LandingPage extends AppCompatActivity
             }
         });
 
+
         fragment = new FragmentDetailProfile();
         judul.setText("");
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainframe, fragment);
         ft.commit();
+
+
 
 
         /*Bundle b = getIntent().getExtras();
@@ -224,6 +241,10 @@ public class LandingPage extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public String getNama() {
+        return mUser.getNama();
     }
 
 }

@@ -36,7 +36,12 @@
         <activity
             android:name=".UbahDetailProfile"
             android:label=""
-            android:parentActivityName=".HalamanUbahProfil"></activity>
+
+            android:parentActivityName=".LandingPage"/>
+
+        <activity android:name=".PesanPersonal"
+            />
+
     </application>
 
 </manifest>

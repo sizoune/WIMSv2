@@ -56,7 +56,7 @@ public class AdapterChatPersonal extends BaseAdapter {
             TextView time = (TextView) v.findViewById(R.id.message_time);
             isi.setText(chat.getMessage());
             time.setText(DateFormat.format("(HH:mm:ss)", chat.getWaktu()));
-            /*mStorageRef = FirebaseStorage.getInstance().getReference();
+            /*mStorageRef = FirebaseStorage.getInst ance().getReference();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             if (chat.getId().equals(user.getUid())) {
                 v = inflater.inflate(R.layout.adapter_text_mine, parent, false);

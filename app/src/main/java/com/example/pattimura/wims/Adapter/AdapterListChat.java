@@ -60,8 +60,8 @@ public class AdapterListChat extends BaseAdapter{
             TextView wkt = (TextView) v.findViewById(R.id.text_view_time_personal);
             Picasso.with(v.getContext()).load(R.drawable.avatar).into(ava);
             nama.setText(lc.getDisplayName());
-            msg.setText(lc.getMessage());
-            wkt.setText(DateFormat.format("HH:mm",lc.getTime()));
+            //msg.setText(lc.getMessage());
+            //wkt.setText(DateFormat.format("HH:mm",lc.getTime()));
         }else{
             v = inflater.inflate(R.layout.listpesan_grup, viewGroup, false);
             ImageView ava = (ImageView) v.findViewById(R.id.img_avatar_grup);
@@ -70,8 +70,8 @@ public class AdapterListChat extends BaseAdapter{
             TextView wkt = (TextView) v.findViewById(R.id.text_view_time_grup);
             Picasso.with(v.getContext()).load(R.drawable.avatar).into(ava);
             nama.setText(lc.getDisplayName());
-            msg.setText(lc.getMessage());
-            wkt.setText(DateFormat.format("HH:mm",lc.getTime()));
+            //msg.setText(lc.getMessage());
+            //wkt.setText(DateFormat.format("HH:mm",lc.getTime()));
         }
 
         return v;
